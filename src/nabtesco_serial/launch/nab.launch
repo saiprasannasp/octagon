@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="nabtesco_serial" name="nabtesco_serial" type="nabtesco_serial" launch-prefix="valgrind">
+  </node>
+</launch>
