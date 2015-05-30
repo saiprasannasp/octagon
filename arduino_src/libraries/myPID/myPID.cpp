@@ -5,7 +5,7 @@ float ITerm = 0.0, lastInput=0.0;
 unsigned long lastTime, SampleTime=100;
 float *myInput, *myOutput, *mySetpoint;
 float kp=0.2, ki=0.4, kd=0.01;
-float outMax=240, outMin=127;
+float outMax=240, outMin=10;
 
 /* Compute() **********************************************************************
  *     This, as they say, is where the magic happens.  this function should be called
