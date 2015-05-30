@@ -82,13 +82,15 @@ void loop() {
     pinMode(pwm_right, INPUT);
     digitalWrite(LEFT_WHEEL_PIN, HIGH);
     digitalWrite(RIGHT_WHEEL_PIN, HIGH);
-    Serial.println("HI");
+    //Serial.println("HI");
     return;
   }
   
   if(disabled)
   {
     disabled = false;
+    memset(avg_throttle, 0, sizeof(int)*5);
+    memset(avg_turn, 0, sizeof(int)*5); 
     digitalWrite(LEFT_WHEEL_PIN, LOW);
     digitalWrite(RIGHT_WHEEL_PIN, LOW);
     pinMode(pwm_left, OUTPUT);  
@@ -104,7 +106,7 @@ void loop() {
    ch1 = CH1_PIN_LOW;
   throttle = map(ch1, CH1_PIN_LOW, CH1_PIN_HIGH, MIN_MAP, MAX_MAP);
   throttle = constrain(throttle, MIN_MAP, MAX_MAP);
-
+  
   /*Here we're determining whether a left or a right turn is being 
   executed*/
   ch2 = pulseIn(CH2_PIN, HIGH); 
@@ -147,13 +149,17 @@ void loop() {
   left = MID_PWM-throttle+turn;
   right = MID_PWM-throttle-turn;
   
-  if(left<MIN_PWM){
+  if(left>MID_PWM-5 && left<MID_PWM+5) {
+    left=MID_PWM;
+  } else if(left<MIN_PWM){
     left=MIN_PWM;
   } else if (left > MAX_PWM) {
     left = MAX_PWM;
   }
   
-  if(right<MIN_PWM){
+  if(right>MID_PWM-5 && right<MID_PWM+5) {
+    right=MID_PWM;
+  } if(right<MIN_PWM){
     right=MIN_PWM;
   } else if (right > MAX_PWM) {
     right = MAX_PWM;
@@ -172,9 +178,9 @@ void loop() {
   //Serial.print("move-turn:"); //Serial debugging stuff
   //Serial.println(move-turn);
   
-  Serial.print(left); //Serial debugging stuff
-  Serial.print("  ");
-  Serial.println(right);
+  //Serial.print(left); //Serial debugging stuff
+  //Serial.print("  ");
+  //Serial.println(right);
 
   //delay(100);
 
