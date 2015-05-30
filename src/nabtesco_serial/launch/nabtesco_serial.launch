@@ -1,0 +1,8 @@
+<launch>
+	<rosparam file="$(find nabtesco_serial)/config/nabtesco.yaml" command="load" ns="nabtesco" />
+  user_sim_time true
+  <node pkg="nabtesco_serial" name="nabtesco_serial" type="nabtesco_serial" output="screen">
+  	<param name="lwheel_usb_name" value="/dev/ttyACM0"/>
+  	<param name="rwheel_usb_name" value="/dev/ttyACM1"/>
+  </node>
+</launch>

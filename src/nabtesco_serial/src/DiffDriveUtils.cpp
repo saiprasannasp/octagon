@@ -1,5 +1,6 @@
 #include <DiffDriveUtils.h>
 #include <ros/ros.h>
+#include <ros/console.h>
 
 # define M_PI  3.14159265358979323846  /* pi */
 
@@ -19,7 +20,7 @@ void DiffDriveUtils::convertTwistToVelocity(const geometry_msgs::Twist& twist, s
 {
 	float dx  = twist.linear.x;
   	float dr = twist.angular.z;
-  	rvel.data = dx+((dr * DiffDriveUtils::m_wheel_base)/2); 
+  	rvel.data = -1.0*(dx+((dr * DiffDriveUtils::m_wheel_base)/2)); 
   	lvel.data = dx-((dr * DiffDriveUtils::m_wheel_base)/2);
 }
 

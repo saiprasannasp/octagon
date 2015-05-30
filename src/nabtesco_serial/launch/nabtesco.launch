@@ -1,31 +1,55 @@
 <launch>
-  <param name="use_sim_time" value="true" />
+  <param name="use_sim_time" value="false" />
+
   <rosparam file="$(find nabtesco_serial)/config/nabtesco.yaml" command="load" ns="nabtesco" />
-  user_sim_time true
+  
   <node pkg="nabtesco_serial" name="nabtesco_serial" type="nabtesco_serial" output="screen">
   	<param name="lwheel_usb_name" value="/dev/ttyACM0"/>
   	<param name="rwheel_usb_name" value="/dev/ttyACM1"/>
   </node>
-  
+
+  <!--node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
+    <rosparam file="$(find nabtesco_serial)/config/gmapping_params.yaml" />
+    <remap from="scan" to="/scan" />
+   <param name="scan" value="/scan" />
+  </node-->
+
   <arg name="scan_topic" default="/scan" />
-  <node pkg="tf" type="static_transform_publisher" name="laser_to_base_link" args="0 0 0.54 0 0 0 /base_link /base_scan 20" />
+  <node pkg="tf" type="static_transform_publisher" name="laser_to_base_link" args="0 0 0.482 0 0 0 /base_link /base_scan 100" />
+  
   <node name="urg_node" pkg="urg_node" type="urg_node">
    <param name="frame_id" value="/base_scan" />
    <param name="ip_address" value="192.168.0.10" />
   </node>
 
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
-  	<param name="scan" value="/base_scan"/>
+  <node pkg="amcl" type="amcl" name="amcl">
+    <rosparam file="$(find nabtesco_serial)/config/nab_amcl.yaml" command="load"/>
+    <param name="initial_pose_x" value="0.0"/>
+    <param name="initial_pose_y" value="0.0"/>
+    <param name="initial_pose_z" value="0.0"/>
+    <remap from="scan" to="/scan" />
   </node>
 
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find nabtesco_serial)/map/my_map.pgm my_map_resolution"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find nabtesco_serial)/map/mymap_2.yaml"/>
+
+  <!--node pkg="map_server" type="map_server" name="slam_map_loader" args="$(find gmapping_test)/yaml/map.yaml" /-->
+
+
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find nabtesco_serial)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find nabtesco_serial)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find nabtesco_serial)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find nabtesco_serial)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find nabtesco_serial)/config/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find nabtesco_serial)/config/move_base_params.yaml" command="load" />
+    <rosparam file="$(find nabtesco_serial)/config/global_planner_params.yaml" command="load" />
   </node>
+
+
+  <param name="robot_description" textfile="$(find nabtesco_serial)/urdf/nabtesco.urdf" />
+  <param name="use_gui" value="False"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nabtesco_serial)/rviz/nab_rviz.rviz" respawn="false" />
 

@@ -50,8 +50,8 @@ int main(int argc, char **argv)
   ros::Publisher lwheelVel = n.advertise<std_msgs::Float32>("lwheelVelocity", 1000);
   ros::Publisher rwheelVel = n.advertise<std_msgs::Float32>("rwheelVelocity", 1000);
 
-  ros::Subscriber sub = n.subscribe("setpoint", 1000, setPoint);
-  ros::Subscriber sub_cmdvel = n.subscribe("cmd_vel", 1000, cmdVel);
+  ros::Subscriber sub = n.subscribe("/setpoint", 1000, setPoint);
+  ros::Subscriber sub_cmdvel = n.subscribe("/cmd_vel", 1000, cmdVel);
 
   NabOdom nab_odom(n);
   //NabLaser nab_laser(n);
@@ -66,11 +66,19 @@ int main(int argc, char **argv)
   {
     std_msgs::Float32 ltvel, rtvel;
     rtvel.data = ltvel.data = 0.0;
+
     DiffDriveUtils::convertRPMToVelocity(lnserial.GetVelocity(),ltvel.data);
     DiffDriveUtils::convertRPMToVelocity(rnserial.GetVelocity(),rtvel.data);
     //ROS_INFO("lwhel %f", ltvel.data);
+
+    /*just to see velocity in RPM*/
+    //ltvel.data = lnserial.GetVelocity();
+    //rtvel.data = rnserial.GetVelocity();
+
     lwheelVel.publish(ltvel);
     rwheelVel.publish(rtvel);
+
+    
     lnserial.WriteSerial(lvelset.data);
     rnserial.WriteSerial(rvelset.data);
     ros::spinOnce();

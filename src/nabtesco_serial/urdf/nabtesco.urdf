@@ -1,0 +1,103 @@
+<robot name="nabtesco_robot">
+  <link name="left_wheel_lnk">
+    <visual>
+     <origin rpy="1.57 0 0" />
+     <geometry>
+      <mesh filename="package://nabtesco_serial/meshes/8020_Wheel.STL" />
+     </geometry>
+     <material name="blue">
+        <color rgba="0 0 .8 1"/>
+      </material>
+   </visual>
+  </link>
+  <link name="right_wheel_lnk">
+    <visual>
+    <origin rpy="1.57 0 0" />
+     <geometry>
+      <mesh filename="package://nabtesco_serial/meshes/8020_Wheel.STL" />
+     </geometry>
+     <material name="blue">
+        <color rgba="0 0 .8 1"/>
+      </material>
+   </visual>
+  </link>
+  <link name="base_link"> 
+   <visual>
+     <origin xyz="0 0 0" rpy="1.57 0 0" />
+     <geometry>
+      <mesh filename="package://nabtesco_serial/meshes/nabtesco_base.STL" />
+     </geometry>
+     <material name="blue">
+        <color rgba="0 0 .8 1"/>
+      </material>
+   </visual>
+   <collision>
+      <geometry>
+        <cylinder length="0.762" radius="0.419"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+   </link>
+  <link name="base_laser">
+    <visual>
+     <origin xyz="0 0 0" rpy="0 0 0" />
+     <geometry>
+      <mesh filename="package://nabtesco_serial/meshes/hokuyo.dae" />
+     </geometry>
+     <material name="blue">
+        <color rgba="0 0 .8 1"/>
+      </material>
+   </visual>
+
+   <collision>
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+     <geometry>
+        <box size="0.1 0.1 0.1"/>
+     </geometry>
+   </collision>
+   <inertial> 
+     <mass value="1e-5" />
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+     <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+   </inertial>
+  </link>
+
+  <sensor name="hokuyo_laser" update_rate="10">
+   <parent link="base_laser"/>
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+   <ray>
+     <horizontal samples="100" resolution="1" min_angle="-1.5708" max_angle="1.5708"/>
+     <vertical samples="1" resolution="1" min_angle="0" max_angle="0"/>
+   </ray>
+ </sensor>
+
+  <!--link name="base_footprint"/>
+  <joint name="footprint" type="fixed" >
+   <parent link="base_link" />
+    <child link="base_footprint" />
+    <origin xyz="0 0 -0.1016" rpy="0 0 0" />
+  </joint-->
+
+  <joint name="joint1" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_lnk"/>
+    <origin xyz="0 0.29 -0.025"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <joint name="joint2" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_lnk"/>
+    <origin xyz="0 -0.29 -0.025" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <joint name="joint3" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_laser"/>
+    <origin xyz="0 0 0.482" />
+  </joint>
+</robot>
