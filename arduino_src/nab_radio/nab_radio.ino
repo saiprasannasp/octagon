@@ -24,10 +24,12 @@ int ch3;
 #define CH3_PIN_LOW 1064
 
 
+#include <nabSerialCom.h>
+
 int throttle;
 int turn;
 bool disabled = false;
-byte bkp_TCCR1B, bkp_TCCR0B, bkp_TCCR2B;
+extern byte bkp_TCCR1B, bkp_TCCR0B, bkp_TCCR2B;
 
 int pwm_left = 3;
 int pwm_right = 11;
@@ -38,7 +40,7 @@ int prev_ch1=0;
 int prev_ch2=0;
 int avg_throttle[5] = {0, 0, 0, 0, 0};
 int avg_turn[5] = {0, 0, 0, 0, 0};
-int count=0;
+int countl=0;
 
 void setup() {
 
@@ -113,10 +115,10 @@ void loop() {
   turn = map(ch2,CH2_PIN_LOW,CH2_PIN_HIGH, MIN_MAP, MAX_MAP);
   turn = constrain(turn, MIN_MAP, MAX_MAP);
   
-  int loc = count%5;
+  int loc = countl%5;
   avg_throttle[loc]=throttle;
   avg_turn[loc]=turn;
-  count++;
+  countl++;
   int throttle_sum=0;
   int turn_sum=0;
   for(int i=0; i<5; i++)
@@ -178,38 +180,3 @@ void loop() {
 
 }
 
-
-void setPwmFrequency(int pin, int divisor) {
-  byte mode;
-   bkp_TCCR1B = TCCR1B;
-   bkp_TCCR0B = TCCR0B; 
-   bkp_TCCR2B = TCCR2B;
-   
-  if(pin == 5 || pin == 6 || pin == 9 || pin == 10) {
-    switch(divisor) {
-      case 1: mode = 0x01; break;
-      case 8: mode = 0x02; break;
-      case 64: mode = 0x03; break;
-      case 256: mode = 0x04; break;
-      case 1024: mode = 0x05; break;
-      default: return;
-    }
-    if(pin == 5 || pin == 6) {
-      TCCR0B = TCCR0B & 0b11111000 | mode;
-    } else {
-      TCCR1B = TCCR1B & 0b11111000 | mode;
-    }
-  } else if(pin == 3 || pin == 11) {
-    switch(divisor) {
-      case 1: mode = 0x01; break;
-      case 8: mode = 0x02; break;
-      case 32: mode = 0x03; break;
-      case 64: mode = 0x04; break;
-      case 128: mode = 0x05; break;
-      case 256: mode = 0x06; break;
-      case 1024: mode = 0x7; break;
-      default: return;
-    }
-    TCCR2B = TCCR2B & 0b11111000 | mode;
-  }
-}
