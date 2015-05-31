@@ -8,11 +8,12 @@
   	<param name="rwheel_usb_name" value="/dev/ttyACM1"/>
   </node>
 
-  <!--node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
     <rosparam file="$(find nabtesco_serial)/config/gmapping_params.yaml" />
     <remap from="scan" to="/scan" />
+    <remap from="dynamic_map" to="/map" />
    <param name="scan" value="/scan" />
-  </node-->
+  </node>
 
   <arg name="scan_topic" default="/scan" />
   <node pkg="tf" type="static_transform_publisher" name="laser_to_base_link" args="0 0 0.482 0 0 0 /base_link /base_scan 100" />
@@ -20,17 +21,18 @@
   <node name="urg_node" pkg="urg_node" type="urg_node">
    <param name="frame_id" value="/base_scan" />
    <param name="ip_address" value="192.168.0.10" />
+
   </node>
 
-  <node pkg="amcl" type="amcl" name="amcl">
+  <!--node pkg="amcl" type="amcl" name="amcl">
     <rosparam file="$(find nabtesco_serial)/config/nab_amcl.yaml" command="load"/>
     <param name="initial_pose_x" value="0.0"/>
     <param name="initial_pose_y" value="0.0"/>
     <param name="initial_pose_z" value="0.0"/>
     <remap from="scan" to="/scan" />
-  </node>
+  </node-->
 
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find nabtesco_serial)/map/mymap_2.yaml"/>
+  <!--node name="map_server" pkg="map_server" type="map_server" args="$(find nabtesco_serial)/map/mymap_2.yaml"/-->
 
   <!--node pkg="map_server" type="map_server" name="slam_map_loader" args="$(find gmapping_test)/yaml/map.yaml" /-->
 
@@ -42,7 +44,7 @@
     <rosparam file="$(find nabtesco_serial)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find nabtesco_serial)/config/base_local_planner_params.yaml" command="load" />
     <rosparam file="$(find nabtesco_serial)/config/move_base_params.yaml" command="load" />
-    <rosparam file="$(find nabtesco_serial)/config/global_planner_params.yaml" command="load" />
+    <!--rosparam file="$(find nabtesco_serial)/config/global_planner_params.yaml" command="load" /-->
   </node>
 
 

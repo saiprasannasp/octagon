@@ -1,2 +1,4 @@
 NavfnROS:
-  allow_unknown: true
+  allow_unknown: True
+  #use_dijkstra: True
+#  old_navfn_behaviour: True

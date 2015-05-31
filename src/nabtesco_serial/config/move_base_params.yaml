@@ -1,3 +1,5 @@
 planner_frequency: 3.0
 planner_patience: 5.0
-
+conservative_reset_dist: 2.0
+recovery_behavior_enabled: false
+clearing_rotation_allowed: false

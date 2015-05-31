@@ -5,4 +5,11 @@
    <param name="frame_id" value="/base_scan" />
    <param name="ip_address" value="192.168.0.10" />
 </node>
+
+<param name="robot_description" textfile="$(find nabtesco_serial)/urdf/nabtesco.urdf" />
+<param name="use_gui" value="False"/>
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+<node pkg="rviz" type="rviz" name="rviz" args="-d $(find nabtesco_serial)/rviz/nab_rviz.rviz" respawn="false" />
 </launch> 

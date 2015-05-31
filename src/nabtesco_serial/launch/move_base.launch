@@ -5,6 +5,8 @@
   <arg name="start_y" value="44.0" />
   <arg name="start_psi" value="-1.57079632679" />
 
+  <arg name="dynamic_map" default="false"/>  
+
   <!-- Run the map server -->
   <!--node name="map_server" pkg="map_server" type="map_server" args="$(find nabtesco_serial)/map/my_map.pgm my_map_resolution"/-->
 
