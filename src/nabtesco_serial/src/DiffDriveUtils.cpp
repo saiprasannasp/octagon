@@ -27,6 +27,9 @@ void DiffDriveUtils::convertTwistToVelocity(const geometry_msgs::Twist& twist, s
 
 void DiffDriveUtils::convertTwistToRPM(const geometry_msgs::Twist& twist, std_msgs::Float32& lvel, std_msgs::Float32& rvel)
 {
+	convertTwistToVelocity(twist, lvel, rvel);
+	ROS_INFO("lwhel, rvel Velocity setpoint %f ,  %f", lvel.data, rvel.data);
+
 	//First convert the twist to velocity.
 	//then convert velocity to RPM
 	//velocity to RPM calc =  vel/(0.10472*m_wheel_raduis)
@@ -41,6 +44,8 @@ void DiffDriveUtils::convertTwistToRPM(const geometry_msgs::Twist& twist, std_ms
 void DiffDriveUtils::convertWheelVelToPose(const double& lvel, const double& rvel, double& xvel, double& yvel, double& thvel)
 {
 	thvel = (rvel-lvel)/DiffDriveUtils::m_wheel_base;
-	xvel = ((rvel+lvel)/2)*cos(thvel);
-	yvel = ((rvel+lvel)/2)*sin(thvel);
+	//xvel = ((rvel+lvel)/2)*cos(thvel);
+	xvel = ((rvel+lvel)/2);
+	//yvel = ((rvel+lvel)/2)*sin(thvel);
+	yvel = 0.0;
 }
