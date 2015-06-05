@@ -1,6 +1,6 @@
-#define MAX_PWM 255
+#define MAX_PWM 245
 #define MID_PWM 127
-#define MIN_PWM 0
+#define MIN_PWM 10
 
 #define MAX_MAP 127
 #define MIN_MAP -127
@@ -23,6 +23,7 @@ int ch3;
 #define CH3_PIN_HIGH 1898
 #define CH3_PIN_LOW 1064
 
+#define LIGHT_PIN 13
 
 #include <nabSerialCom.h>
 
@@ -41,6 +42,9 @@ int prev_ch2=0;
 int avg_throttle[5] = {0, 0, 0, 0, 0};
 int avg_turn[5] = {0, 0, 0, 0, 0};
 int countl=0;
+
+int count_blink=0;
+bool on = true;
 
 void setup() {
 
@@ -61,6 +65,8 @@ void setup() {
   
   analogWrite(pwm_left, 127);  
   analogWrite(pwm_right, 127);
+  
+  pinMode(LIGHT_PIN, OUTPUT);
 }
 
 void loop() {
@@ -83,6 +89,21 @@ void loop() {
     digitalWrite(LEFT_WHEEL_PIN, HIGH);
     digitalWrite(RIGHT_WHEEL_PIN, HIGH);
     //Serial.println("HI");
+    
+    count_blink++;
+    if(count_blink>300  && on)
+    {
+      digitalWrite(LIGHT_PIN, LOW);
+      on = false;
+    }
+    
+    if(count_blink>600)
+    {
+      count_blink = 0;
+      on = true;
+      digitalWrite(LIGHT_PIN, HIGH);
+    }
+    
     return;
   }
   
@@ -97,6 +118,8 @@ void loop() {
     pinMode(pwm_right, OUTPUT);
     setPwmFrequency(pwm_left, 256);
     setPwmFrequency(pwm_left, 256);
+    
+    digitalWrite(LIGHT_PIN, HIGH);
   }
   
   ch1 = pulseIn(CH1_PIN, HIGH);
