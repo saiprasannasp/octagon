@@ -1,0 +1,7 @@
+<library path="lib/libNabVisionNodelet">
+  <class name="octagon/NabVisionNodelet" type="octagon::NabVisionNodelet" base_class_type="nodelet::Nodelet">
+  <description>
+  		Nabtesco Vision nodelet.
+  </description>
+  </class>
+</library>
