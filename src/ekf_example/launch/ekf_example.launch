@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<launch>
+<param name="use_sim_time" value="false" />
+
+  <!--include file="$(find gps_example)/launch/gps_example.launch" /-->
+
+  <node pkg="ekf_example" type="ekf_example_node" name="ekf" output="screen" >
+    <rosparam file="$(find ekf_example)/yaml/ekf_params.yaml" />
+
+<!--remap from="fix" to="/gps_fix" />
+
+<remap from="odom_serial" to="/twist" /-->
+
+
+  </node>
+
+
+ <!-- <node pkg="rosbag" type="play" name="rosbag" args="$(find ekf_example)/bags/test.bag -clock -s 5" /> -->
+
+
+</launch>

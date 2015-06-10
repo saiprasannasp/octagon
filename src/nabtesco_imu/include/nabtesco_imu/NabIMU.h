@@ -21,8 +21,9 @@ namespace octagon
 		float m_magx, m_magy, m_magz;
 		float m_accx, m_accy, m_accz;
 		pthread_mutex_t m_mutexsum;
+		float m_xoffset;
 
-		ros::Publisher m_magpub;
+		ros::Publisher m_magpub, m_heading;
 
 	public:
 		NabIMU(ros::NodeHandle& n);

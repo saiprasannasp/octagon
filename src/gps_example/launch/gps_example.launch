@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- The 'use_sim_time' parameter tells ROS to not use system time,
+       but instead use the time published from another source, usually
+       a bag file -->
+  <param name="use_sim_time" value="false" />
+
+<node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_navsat_driver">
+<param name="port" value="/dev/ttyACM2" />
+
+</node>
+
+  <!-- Node that converts GPS to ENU coordinates and plots a path -->
+  <node pkg="gps_example" type="gps_example_node" name="gps_example_node" />
+
+  <!-- Node that integrates the vehicle speed to obtain a position and heading estimate -->
+  <node pkg="gps_example" type="sensor_integration_node" name="sensor_integration_node" />
+
+  <!-- Rviz to visualize the output -->
+  <!--node pkg="rviz" type="rviz" name="rviz" args="-d $(find gps_example)/rviz/rviz_config.rviz" /-->
+
+  <!-- Static transform from the laser frame to the robot base frame to visualize LIDAR scan data -->
+  <!--node pkg="tf" type="static_transform_publisher" name="laser2robot" args="0.1 0 0.25 0 0 0 1 robot_sensors laser 100" /-->
+
+</launch>

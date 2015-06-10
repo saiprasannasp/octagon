@@ -1,0 +1,8 @@
+prefix=/home/dhrgam79/ros/src/ugv_course/gps_navigation/devel
+
+Name: gps_navigation
+Description: Description of gps_navigation
+Version: 0.0.0
+Cflags: -I/home/dhrgam79/ros/src/ugv_course/gps_navigation/include
+Libs: -L/home/dhrgam79/ros/src/ugv_course/gps_navigation/devel/lib 
+Requires: 

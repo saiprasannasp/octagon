@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "gps_example")
+set(gps_example_MAINTAINER "micho <micho@todo.todo>")
+set(gps_example_DEPRECATED "")
+set(gps_example_VERSION "0.0.0")
+set(gps_example_BUILD_DEPENDS "geometry_msgs" "nav_msgs" "roscpp" "sensor_msgs" "dynamic_reconfigure" "tf")
+set(gps_example_RUN_DEPENDS "geometry_msgs" "nav_msgs" "roscpp" "dynamic_reconfigure" "sensor_msgs" "tf")
+set(gps_example_BUILDTOOL_DEPENDS "catkin")

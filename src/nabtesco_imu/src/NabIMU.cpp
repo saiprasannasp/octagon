@@ -1,18 +1,20 @@
 #include <nabtesco_imu/NabIMU.h>
 #include <vector>
 #include <geometry_msgs/Vector3.h>
+#include <std_msgs/Float32.h>
 #include <math.h>
 
 using namespace octagon;
 
 NabIMU::NabIMU(ros::NodeHandle& n):
 m_nh(n), m_magx(0.0), m_magy(0.0), m_magz(0.0),
-m_accx(0.0), m_accy(0.0), m_accz(0.0)
+m_accx(0.0), m_accy(0.0), m_accz(0.0),  m_xoffset(-300)
 {
 	m_nh.param("/NabIMU/portname", m_portname, std::string("/dev/ttyUSB0"));
 	m_nh.param("/NabIMU/baudrate", m_baud, B115200);
 
 	m_magpub = n.advertise<geometry_msgs::Vector3>("magxyz", 1000);
+	m_heading = n.advertise<std_msgs::Float32>("heading", 1000);
 }
 
 int NabIMU::Init()
@@ -109,7 +111,7 @@ void NabIMU::ReadSerial()
 			charcount = 0;
 			std::string str = buff;
 			memset(buff, '\0', sizeof(char)*2048);
-			ROS_INFO("Found reading %d str %s", charcount, str.c_str());
+			//ROS_INFO("Found reading %d str %s", charcount, str.c_str());
 
 			size_t pos = str.find("Mag:");
 			if(pos == std::string::npos)
@@ -169,20 +171,22 @@ void NabIMU::Update()
 	mag.x=m_magx; mag.y=m_magy; mag.z=m_magz;
 
 	float heading=0.0;
-	if(m_magy>0) 
-		heading = 90 - (atan(m_magx/m_magy)*180/M_PI);
-    else if (m_magy<0) 
-    	heading = 270 - (atan(m_magx/m_magy)*180/M_PI);
+	/*if(m_magy>0) 
+		heading = 90 - (atan2(m_magy,(m_magx-m_xoffset))*180/M_PI);
+    	else if (m_magy<0) 
+    		heading = 270 - (atan2(m_magy,(m_magx-m_xoffset))*180/M_PI);
 	else if (m_magy==0 && m_magx<0) 
 		heading = 180.0;
 	else if(m_magy==0 && m_magx>0) 
-		heading = 0.0;
-	//ROS_INFO("Heading simple: %f", heading);
+		heading = 0.0;*/
+
+	heading = atan2(m_magy,(m_magx-m_xoffset));
+	ROS_INFO("Heading simple: %f", heading);
 
 	//Magnetic declination: for ou igvc field -7° 27' 
 	
 	//Calculate the heading with tilt compentation.
-	float accXNorm = m_accx/sqrt(m_accx*m_accx+m_accy*m_accy+m_accz*m_accz);
+	/*float accXNorm = m_accx/sqrt(m_accx*m_accx+m_accy*m_accy+m_accz*m_accz);
 	float accYNorm = m_accy/sqrt(m_accx*m_accx+m_accy*m_accy+m_accz*m_accz);
 	float pitch = asin(accXNorm);
     float roll = -asin(accYNorm/cos(pitch));
@@ -191,7 +195,10 @@ void NabIMU::Update()
     float magYcomp = m_magx*sin(asin(accYNorm/cos(pitch)))*sin(asin(accXNorm))+m_magy*cos(asin(accYNorm/cos(pitch)))-m_magz*sin(asin(accYNorm/cos(pitch)))*cos(asin(accXNorm));
 
     heading = 180*atan2(magYcomp,magXcomp)/M_PI;
-    //ROS_INFO("Heading tilt compensated: %f", heading);
-
+    ROS_INFO("Heading tilt compensated: %f", heading);*/
+	
+	std_msgs::Float32 hdata;
+	hdata.data = heading;
+	m_heading.publish(hdata);
 	m_magpub.publish(mag);
 }
