@@ -1,32 +1,41 @@
+<?xml version="1.0"?>
+
 <launch>
   <param name="use_sim_time" value="false" />
 
   <rosparam file="$(find nabtesco_serial)/config/nabtesco.yaml" command="load" ns="nabtesco" />
   
+  <node pkg="nabtesco_imu" name="nabtesco_imu" type="nabimunode"/>
   <node pkg="nabtesco_serial" name="nabtesco_serial" type="nabtesco_serial" output="screen">
   	<param name="lwheel_usb_name" value="/dev/ttyACM0"/>
   	<param name="rwheel_usb_name" value="/dev/ttyACM1"/>
+	<!--remap from="odom" to="/odom_serial" /-->
   </node>
-  <!--node name="nmea_navsat_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver">
-   <param name="port" value="/dev/ttyACM0" />
-  </node-->
+  <node name="nmea_navsat_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver">
+   <param name="port" value="/dev/ttyACM2" />
+  </node>
+
+  <!--include file="$(find ekf_example)/launch/ekf_example.launch" /-->
   <arg name="scan_topic" default="/scan" />
   <node name="urg_node" pkg="urg_node" type="urg_node">
    <param name="frame_id" value="/base_scan" />
    <param name="ip_address" value="192.168.0.10" />
    <param name="angle_min" value="-1.88495559215" />
    <param name="angle_max" value="1.74532925199" />
+   <param name = "frame_id" value= "/base_link"/>
   </node>
   <node pkg="tf" type="static_transform_publisher" name="laser_to_base_link" args="0 0 0.482 0 0 0 /base_link /base_scan 100" />
-  
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
+ 
+
+  <!--node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
     <rosparam file="$(find nabtesco_serial)/config/gmapping_params.yaml" />
     <remap from="scan" to="/scan" />
     <remap from="dynamic_map" to="/map" />
    <param name="scan" value="/scan" />
-  </node>
+  </node-->
   
-  <!--node pkg="amcl" type="amcl" name="amcl">
+  
+<!--node pkg="amcl" type="amcl" name="amcl">
     <rosparam file="$(find nabtesco_serial)/config/nab_amcl.yaml" command="load"/>
     <param name="initial_pose_x" value="0.0"/>
     <param name="initial_pose_y" value="0.0"/>
@@ -75,6 +84,9 @@
   <param name="use_gui" value="False"/>
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  
+
 
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find nabtesco_serial)/rviz/nab_rviz.rviz" respawn="false" />
 

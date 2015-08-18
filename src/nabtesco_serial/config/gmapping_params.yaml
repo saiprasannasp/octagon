@@ -35,7 +35,7 @@ maxRange: 10.0
 inverted_laser: false
 throttle_scans: 1
 base_frame: base_link
-map_frame: map
+map_frame: odom
 odom_frame: odom
 
 

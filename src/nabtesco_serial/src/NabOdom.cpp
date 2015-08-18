@@ -1,11 +1,16 @@
 #include <NabOdom.h>
 #include <nav_msgs/Odometry.h>
 #include <DiffDriveUtils.h>
+#include <sensor_msgs/NavSatFix.h>
+#include <geometry_msgs/PoseStamped.h>
 
-NabOdom::NabOdom(ros::NodeHandle& n)
+NabOdom::NabOdom(ros::NodeHandle& n) : m_headingval(0.0)
 {
 	//initialize the pose of the robot to zero. means robot starting at origin of odom frame.
 	m_odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
+	//m_cmp_heading = n.subscribe("heading", 1, &NabOdom::rcvHeading, this);
+        //m_gps = n.subscribe("/fix", 1, &NabOdom::rcvGPS, this);
+        //m_goal_gps = n.subscribe("/move_base_simple/goal", 1, &NabOdom::rcvGoalGPS, this);
 
 	m_px=m_py=m_pth=0.0;
 
@@ -19,11 +24,40 @@ NabOdom::~NabOdom()
 
 }
 
+void NabOdom::rcvGPS(const sensor_msgs::NavSatFix::ConstPtr& msg)
+{
+	double  la = msg->latitude;
+        double lo =  msg->longitude;
+        double sx = la_goal - la;
+        double sy = lo_goal-lo;
+        double gps_angle = atan2(sy, sx);
+        error_angle =gps_angle;//= (gps_angle - m_headingval)* 0.9;
+	
+}
+
+void NabOdom::rcvGoalGPS(const geometry_msgs::PoseStamped::ConstPtr& msg)
+{
+	la_goal = msg->pose.position.x;
+        lo_goal =msg->pose.position.y;
+}
+
+
+
+void NabOdom::rcvHeading(const std_msgs::Float32::ConstPtr& msg)
+{
+	//ROS_INFO("I heard heading: [%f]", msg->data);
+	m_headingval = msg->data;
+	
+}
+
 void NabOdom::Update(double vl_wheel, double vr_wheel)
 {
 	double vx=0.0, vy=0.0, vth = 0.0;
 	DiffDriveUtils::convertWheelVelToPose(vl_wheel, vr_wheel, vx, vy, vth);
+	ROS_INFO("NAB_VEL update %f  %f", vl_wheel, vr_wheel);
+	ROS_INFO("NAB_ODOM update %f  %f  %f", vx, vy, vth);
 	Update(vx, vy, vth);
+        
 }
 
 //input 1. velocity of wheel in x direction
@@ -42,9 +76,10 @@ void NabOdom::Update(double vx, double vy, double vth)
     m_px += delta_x;
     m_py += delta_y;
     m_pth += delta_th;
+    //m_pth = m_headingval;
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
-    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(m_pth);
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(m_pth);//error_angle);
 
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;

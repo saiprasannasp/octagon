@@ -10,10 +10,10 @@ TrajectoryPlannerROS:
 
   holonomic_robot: false
 
-  meter_scoring: true
-  pdist_scale: 0.75
-  gdist_scale: 1.0
-  occdist_scale: 0.1
+  meter_scoring: false
+  pdist_scale: 0.01
+  gdist_scale: 0.2
+  occdist_scale: 0.03
   heading_scoring_lookahead: 0.325
   heading_scoring: false
   heading_scoring_timestep: 0.8
@@ -24,4 +24,4 @@ TrajectoryPlannerROS:
   escape_reset_dist: 0.1
   escape_reset_theta: 0.1
   
-  #dwa: true
+  dwa: true
