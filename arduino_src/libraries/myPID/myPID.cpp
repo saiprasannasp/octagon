@@ -2,11 +2,11 @@
 #include "Arduino.h"
 
 /* we need to initilize Iterm to mid point of PWM to avoid kickbak at the start*/
-float ITerm = 127.0, lastInput=0.0;
-unsigned long lastTime, SampleTime=100;
+float ITerm = 143.0, lastInput=0.0;
+unsigned long lastTime, SampleTime=50;
 float *myInput, *myOutput, *mySetpoint;
-float kp=0.2, ki=0.4, kd=0.01;
-float outMax=240, outMin=10;
+float kp=-0.2, ki=-0.5, kd=-0.01;
+float outMax=243, outMin=43;
 
 /* Compute() **********************************************************************
  *     This, as they say, is where the magic happens.  this function should be called
@@ -35,12 +35,13 @@ bool PID_Compute()
       
       /*Compute PID Output*/
       
-      float output = (kp * error) + ITerm-(kd * dInput);
+      float output = (kp * error) + ITerm-(kd * dInput); 
       
       //Serial.print(ITerm);
       //Serial.print("::");
       //Serial.print(kp*error);
       //Serial.print("::");
+      //Serial.println(kd*dInput);
       //Serial.println(rpm);
       //temp = temp+ITerm;
       //temp = output;

@@ -3,7 +3,7 @@
  * Reading analog input 0 to control analog PWM output 3
  ********************************************************/
 
-#include <PID_v1.h> // PID will incorporate encoder(input), pwm to motor(output), info. from computer(setpoint) 
+//#include <PID_v1.h> // PID will incorporate encoder(input), pwm to motor(output), info. from computer(setpoint) 
 
 #define encoder0PinA 2
 #define encoder0PinB 3
@@ -153,8 +153,8 @@ void loop()
   Serial.print('\n');*/
   
   // say what you got:
-  Serial.print(Output, DEC);
-  Serial.print("  ");
+  //Serial.print(Output, DEC);
+  //Serial.print("  ");
   Serial.println(encoder0Pos, DEC);
  
 }

@@ -1,6 +1,7 @@
 #define encoder0PinA 3
 #define encoder0PinB 2
 #define PWM_PIN 11
+#define PWR_PIN 9
 #define AUTO_ENABLE 5
 #define ENCODER_TICK_COUT 100.0
 #define GEAR_RATIO 100.0
@@ -10,7 +11,7 @@
 #include <myPID.h>
 
 //Define Variables we'll be connecting to
-float setpoint=0.0, rpm=0.0, pwm_output=127, prev_rpm=0.0, rpmA=0.0;
+float setpoint=0.0, rpm=0.0, pwm_output=143, prev_rpm=0.0, rpmA=0.0;
 bool disabled = false;
 
 extern byte bkp_TCCR1B, bkp_TCCR0B, bkp_TCCR2B;
@@ -55,6 +56,9 @@ void setup()
   //this will set the pin to read or write mode
   //DDRE = 0b11100111; atmega 2560
   DDRD = 0b11110011;
+  pinMode(PWR_PIN, OUTPUT);
+  digitalWrite(PWR_PIN, HIGH);
+  
   pinMode(encoder0PinB, INPUT); 
   pinMode(encoder0PinA, INPUT);
   
@@ -66,7 +70,7 @@ void setup()
   //set default value for PWM
   pinMode(PWM_PIN, OUTPUT);
   //setPwmFrequency(9, 256); // adjusts the frequency of the pwm sent to the b-bridge
-  setPwmFrequency(PWM_PIN, 256);
+  setPwmFrequency(PWM_PIN, 128);
   
   analogWrite(PWM_PIN, pwm_output);
 
@@ -90,13 +94,14 @@ void loop()
     // read the incoming byte:
     incomingByte = Serial.read();
     
-    readSetpoint(incomingByte);
+    //readSetpoint(incomingByte);
     
     //'p' will increace the pwm val and 'l' will decrease the pwm val 
-    //if (incomingByte == 112)
-      //setpoint++;
-    //else if ( incomingByte == 108)
-      //setpoint--;
+    /*if (incomingByte == 112)
+      setpoint++;
+    else if ( incomingByte == 108)
+      setpoint--;
+      */
   }
   
   //Debugging
@@ -149,8 +154,8 @@ void loop()
     {
       disabled = false;
       pinMode(PWM_PIN, OUTPUT);  
-      setPwmFrequency(PWM_PIN, 256);
-      pwm_output = 127.0;
+      setPwmFrequency(PWM_PIN, 128);
+      pwm_output = 143.0;
       encoder0Pos=0;
       rpm=prev_rpm=setpoint=rpm=0.0;
       lasttime=curtime=millis();

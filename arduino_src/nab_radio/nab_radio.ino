@@ -1,27 +1,27 @@
-#define MAX_PWM 245
-#define MID_PWM 127
-#define MIN_PWM 10
+#define MAX_PWM 243
+#define MID_PWM 143
+#define MIN_PWM 43
 
-#define MAX_MAP 127
-#define MIN_MAP -127
+#define MAX_MAP 100
+#define MIN_MAP -100
 
 #define LEFT_WHEEL_PIN 4
 #define RIGHT_WHEEL_PIN 5
 
 #define CH1_PIN 7
 int ch1; 
-#define CH1_PIN_HIGH 1882
-#define CH1_PIN_LOW 1054
+#define CH1_PIN_HIGH 1904
+#define CH1_PIN_LOW 1058
 
 #define CH2_PIN 6
 int ch2; 
-#define CH2_PIN_HIGH 1898
-#define CH2_PIN_LOW 1064
+#define CH2_PIN_HIGH 1903
+#define CH2_PIN_LOW 1049
 
 #define CH3_PIN 8
 int ch3; 
-#define CH3_PIN_HIGH 1898
-#define CH3_PIN_LOW 1064
+#define CH3_PIN_HIGH 1903
+#define CH3_PIN_LOW 1048
 
 #define LIGHT_PIN 13
 
@@ -60,11 +60,11 @@ void setup() {
   pinMode(pwm_left, OUTPUT);  
   pinMode(pwm_right, OUTPUT);
   
-  setPwmFrequency(3, 256); // adjusts the frequency of the pwm sent to the b-bridge
-  setPwmFrequency(11, 256); // adjusts the frequency of the pwm sent to the b-bridge
+  setPwmFrequency(pwm_left, 128); // adjusts the frequency of the pwm sent to the b-bridge
+  setPwmFrequency(pwm_right, 128); // adjusts the frequency of the pwm sent to the b-bridge
   
-  analogWrite(pwm_left, 127);  
-  analogWrite(pwm_right, 127);
+  analogWrite(pwm_left, MID_PWM);  
+  analogWrite(pwm_right, MID_PWM);
   
   pinMode(LIGHT_PIN, OUTPUT);
 }
@@ -91,13 +91,13 @@ void loop() {
     //Serial.println("HI");
     
     count_blink++;
-    if(count_blink>300  && on)
+    if(count_blink>50  && on)
     {
       digitalWrite(LIGHT_PIN, LOW);
       on = false;
     }
     
-    if(count_blink>600)
+    if(count_blink>100)
     {
       count_blink = 0;
       on = true;
@@ -116,8 +116,8 @@ void loop() {
     digitalWrite(RIGHT_WHEEL_PIN, LOW);
     pinMode(pwm_left, OUTPUT);  
     pinMode(pwm_right, OUTPUT);
-    setPwmFrequency(pwm_left, 256);
-    setPwmFrequency(pwm_left, 256);
+    setPwmFrequency(pwm_left, 128);
+    setPwmFrequency(pwm_left, 128);
     
     digitalWrite(LIGHT_PIN, HIGH);
   }
@@ -192,6 +192,8 @@ void loop() {
   analogWrite(pwm_left, left); 
   analogWrite(pwm_right, right);
  
+  //Serial.print("1:");
+  //Serial.println(ch1);
   //Serial.print("move:"); //Serial debugging stuff
   //Serial.println(move);
   
@@ -201,9 +203,9 @@ void loop() {
   //Serial.print("move-turn:"); //Serial debugging stuff
   //Serial.println(move-turn);
   
-  //Serial.print(left); //Serial debugging stuff
-  //Serial.print("  ");
-  //Serial.println(right);
+  Serial.print(left); //Serial debugging stuff
+  Serial.print("  ");
+  Serial.println(right);
 
   //delay(100);
 
