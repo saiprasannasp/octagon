@@ -94,7 +94,7 @@ void loop()
     // read the incoming byte:
     incomingByte = Serial.read();
     
-    //readSetpoint(incomingByte);
+    readSetpoint(incomingByte);
     
     //'p' will increace the pwm val and 'l' will decrease the pwm val 
     /*if (incomingByte == 112)
@@ -102,6 +102,7 @@ void loop()
     else if ( incomingByte == 108)
       setpoint--;
       */
+    
   }
   
   //Debugging
