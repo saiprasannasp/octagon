@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/dhrgam79/ros/src/ugv_course/gps_navigation/devel/setup.sh

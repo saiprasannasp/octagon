@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     DiffDriveUtils::convertRPMToVelocity(lnserial.GetVelocity(),ltvel.data);
     DiffDriveUtils::convertRPMToVelocity(rnserial.GetVelocity(),rtvel.data);
-    //ROS_INFO("lwhel %f", ltvel.data);
+    ROS_INFO("lwhel rwel %f, %f", lnserial.GetVelocity(), rnserial.GetVelocity());
 
     /*just to see velocity in RPM*/
     //ltvel.data = lnserial.GetVelocity();

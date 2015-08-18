@@ -1,0 +1,8 @@
+prefix=/home/dhrgam79/ros/src/ugv_course/gps_example/devel
+
+Name: gps_example
+Description: Description of gps_example
+Version: 0.0.0
+Cflags: -I/home/dhrgam79/ros/src/ugv_course/gps_example/include
+Libs: -L/home/dhrgam79/ros/src/ugv_course/gps_example/devel/lib 
+Requires: 
